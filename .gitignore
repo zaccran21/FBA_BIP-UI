@@ -1,0 +1,4 @@
+dist/utils/*.exe
+*.zip
+*.msi
+*.iso
