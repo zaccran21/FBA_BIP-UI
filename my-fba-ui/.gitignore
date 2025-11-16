@@ -25,3 +25,27 @@ dist-ssr
 
 dist/
 *.rdb
+
+# Ignore installers and large binaries
+dist/utils/*.exe
+*.zip
+*.msi
+*.iso
+*.rdb
+
+# Redis dump files
+*.rdb
+
+# Coverage reports
+coverage/
+
+# Temporary files
+*.tmp
+*.log
+
+# Vercel/Netlify build artifacts
+.vercel/
+.netlify/
+
+# TypeScript build cache
+*.tsbuildinfo
