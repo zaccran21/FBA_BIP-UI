@@ -1,0 +1,37 @@
+{
+  "name": "fba-direct-measure",
+  "version": "0.1.0",
+  "description": "FBA direct & indirect measurement backend scaffold",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "migrate": "psql -f scripts/init-db.sql"
+  },
+  "dependencies": {
+    "ajv": "^8.12.0",
+    "ajv-formats": "^3.0.1",
+    "bullmq": "^5.63.2",
+    "cores": "^0.8.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^4.18.2",
+    "ioredis": "^5.3.2",
+    "mustache": "^4.2.0",
+    "pg": "^8.11.0",
+    "puppeteer": "^24.30.0",
+    "react-json-editor-ajrm": "^2.5.14",
+    "react-syntax-highlighter": "^16.1.0"
+  },
+  "devDependencies": {
+    "@types/dotenv": "^6.1.1",
+    "@types/express": "^5.0.5",
+    "@types/lodash": "^4.17.20",
+    "@types/mustache": "^4.2.6",
+    "@types/node": "^20.19.25",
+    "@types/pg": "^8.15.6",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.1.6"
+  }
+}
