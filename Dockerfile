@@ -1,8 +1,27 @@
-FROM node:18-slim
+# Use Node LTS
+FROM node:20
+
+# Set working directory
 WORKDIR /app
+
+# Copy package files
 COPY package*.json ./
-RUN npm ci --only=production
+
+# Install dependencies
+RUN npm install
+
+# Copy schemas manually into dist
+COPY src/schemas ./dist/schema
+
+# Copy source
 COPY . .
+
+# Build TypeScript
 RUN npm run build
+
+# Expose port
 EXPOSE 3000
-CMD ["node","dist/index.js"]
+
+# Start backend
+CMD ["npm", "start"]
+

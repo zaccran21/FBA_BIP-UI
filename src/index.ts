@@ -1,14 +1,19 @@
 import express from 'express';
-import formsRouter from './api/forms';
-import reportsRouter from './api/reports';
-import logger from './utils/logger';
+import formsRouter from './api/forms.js';
+import reportsRouter from './api/reports.js';
+import logger from './utils/logger.js';
 import dotenv from 'dotenv';
 import cors from 'cors';   // <-- add this
 
 dotenv.config();
 
 const app = express();
+app.use(express.json());
 
+// healthcheck route
+app.get('/ping', (req, res) => {
+  res.json({ message: 'pong' });
+});
 // Enable CORS for your frontend origin
 app.use(cors({
   origin: 'http://localhost:5173',   // allow your React dev server
@@ -35,7 +40,8 @@ app.get('/', (req, res) => {
 app.use('/api/forms', formsRouter);
 app.use('/api/reports', reportsRouter);
 
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
+const port = Number(process.env.PORT) || 3000;
+
+app.listen(port, '0.0.0.0', () => {
   logger.info(`Server running on port ${port}`);
 });

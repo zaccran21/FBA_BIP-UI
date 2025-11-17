@@ -1,27 +1,32 @@
-version: "3.8"
 services:
-  app:
+  backend:
     build: .
+    container_name: fba-direct-measure-scaffold-backend-1
     ports:
       - "3000:3000"
-    env_file:
-      - .env
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@db:5432/fbadb
+    volumes:
+      - ../src:/app/src
+      - ../seeds:/app/seeds
+      - ../migrations:/app/migrations
+      - ../package.json:/app/package.json
+      - ../tsconfig.json:/app/tsconfig.json
+    command: npm run dev         # run in dev mode with hot reload
     depends_on:
       - db
-      - redis
+
   db:
     image: postgres:15
+    container_name: fba-direct-measure-scaffold-db-1
     environment:
-      POSTGRES_DB: fbadb
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: fbadb
+    ports:
+      - "5433:5432"   # host:container
     volumes:
-      - db-data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-  redis:
-    image: redis:7
-    ports:
-      - "6379:6379"
+      - pgdata:/var/lib/postgresql/data
+
 volumes:
-  db-data:
+  pgdata:

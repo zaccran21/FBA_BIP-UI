@@ -1,11 +1,5 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.buildIntegratedReport = buildIntegratedReport;
-const mustache_1 = __importDefault(require("mustache"));
-function buildIntegratedReport(summaryJson) {
+import Mustache from 'mustache';
+export function buildIntegratedReport(summaryJson) {
     const template = `
   <html><head><style>body{font-family:Arial;font-size:12px}</style></head><body>
   <h2>FBA Integrated Indirect + Direct Summary</h2>
@@ -31,5 +25,5 @@ function buildIntegratedReport(summaryJson) {
             teacherContextsString: summaryJson.themes?.teacherContexts?.join('; ') || ''
         }
     };
-    return mustache_1.default.render(template, data);
+    return Mustache.render(template, data);
 }

@@ -1,14 +1,22 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateIndirect = exports.validateFba = void 0;
-const ajv_1 = __importDefault(require("ajv"));
-const ajv_formats_1 = __importDefault(require("ajv-formats"));
-const fba_bundle_schema_json_1 = __importDefault(require("../schemas/fba-bundle.schema.json"));
-const indirect_schema_json_1 = __importDefault(require("../schemas/indirect.schema.json"));
-const ajv = new ajv_1.default({ allErrors: true, useDefaults: true });
-(0, ajv_formats_1.default)(ajv);
-exports.validateFba = ajv.compile(fba_bundle_schema_json_1.default);
-exports.validateIndirect = ajv.compile(indirect_schema_json_1.default);
+import Ajv from 'ajv';
+import addFormats from 'ajv-formats';
+import { readFileSync } from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+// Recreate __dirname in ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+// Helper to load JSON schema files manually
+function loadSchema(fileName) {
+    const filePath = path.resolve(__dirname, '../schemas', fileName);
+    return JSON.parse(readFileSync(filePath, 'utf-8'));
+}
+// Load schemas
+const fbaBundle = loadSchema('fba-bundle.schema.json');
+const indirectSchema = loadSchema('indirect.schema.json');
+// Initialize AJV
+const ajv = new Ajv({ allErrors: true });
+addFormats(ajv);
+// Compile validators
+export const validateFba = ajv.compile(fbaBundle);
+export const validateIndirect = ajv.compile(indirectSchema);

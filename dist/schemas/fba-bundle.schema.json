@@ -1,351 +1,352 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "title": "FBA_Direct_Measurement_Schemas",
-    "type": "object",
-    "definitions": {
-        "Header": {
-            "type": "object",
-            "required": [
-                "student_id",
-                "student_name",
-                "target_behavior",
-                "context_label",
-                "observer_name",
-                "date",
-                "start_time",
-                "end_time",
-                "session_number",
-                "session_length_minutes",
-                "consent_confirmed"
-            ],
-            "properties": {
-                "student_id": { "type": "string" },
-                "student_name": { "type": "string" },
-                "dob_age_grade": { "type": "string" },
-                "target_behavior": { "type": "string" },
-                "context_label": { "type": "string" },
-                "observer_name": { "type": "string" },
-                "observer_role": { "type": "string", "enum": ["Observer", "Observer2", "DataLead", "SafetyMonitor", "Parent"] },
-                "ioa_observer_name": { "type": "string" },
-                "date": { "type": "string", "format": "date" },
-                "start_time": { "type": "string", "format": "time" },
-                "end_time": { "type": "string", "format": "time" },
-                "session_number": { "type": "integer", "minimum": 1 },
-                "session_length_minutes": { "type": "integer", "minimum": 1 },
-                "safety_monitor": { "type": "string" },
-                "consent_confirmed": { "type": "boolean" },
-                "video_consent_confirmed": { "type": "boolean" },
-                "submission_timestamp": { "type": "string", "format": "date-time" },
-                "form_version": { "type": "string" }
-            }
-        },
-        "EventRecording": {
-            "type": "object",
-            "properties": {
-                "header_ref": { "$ref": "#/definitions/Header" },
-                "intervals": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "required": ["interval_label", "start_min", "end_min", "occurrences"],
-                        "properties": {
-                            "interval_label": { "type": "string" },
-                            "start_min": { "type": "integer", "minimum": 0 },
-                            "end_min": { "type": "integer", "minimum": 0 },
-                            "occurrences": { "type": "integer", "minimum": 0 },
-                            "notes_for_interval": { "type": "string" }
-                        }
-                    }
-                },
-                "events": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "required": ["event_time", "event_tag"],
-                        "properties": {
-                            "event_time": { "type": "string", "format": "time" },
-                            "event_tag": { "type": "array", "items": { "type": "string" } },
-                            "consequence_tag": { "type": "array", "items": { "type": "string" } },
-                            "free_note": { "type": "string" }
-                        }
-                    }
-                },
-                "total_count": { "type": "integer", "minimum": 0 },
-                "rate_per_minute": { "type": "number", "minimum": 0 },
-                "ioa_done": { "type": "boolean" },
-                "ioa_percent": { "type": "number", "minimum": 0, "maximum": 100 },
-                "fidelity_op_def_used": { "type": "boolean" },
-                "submitter_comments": { "type": "string" }
-            },
-            "required": ["header_ref"]
-        },
-        "DurationLog": {
-            "type": "object",
-            "properties": {
-                "header_ref": { "$ref": "#/definitions/Header" },
-                "behavior_prolonged": { "type": "boolean" },
-                "episode_list": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "required": ["start_time", "end_time"],
-                        "properties": {
-                            "episode_number": { "type": "integer", "minimum": 1 },
-                            "start_time": { "type": "string", "format": "date-time" },
-                            "end_time": { "type": "string", "format": "date-time" },
-                            "duration_seconds": { "type": "number", "minimum": 0 },
-                            "antecedent_tag": { "type": "string" },
-                            "consequence_tag": { "type": "string" },
-                            "intensity_rating": { "type": "integer", "minimum": 1, "maximum": 5 },
-                            "notes": { "type": "string" }
-                        }
-                    }
-                },
-                "total_episodes": { "type": "integer" },
-                "total_duration_seconds": { "type": "number" },
-                "percent_of_session": { "type": "number", "minimum": 0, "maximum": 100 },
-                "ioa_recorded": { "type": "boolean" },
-                "ioa_method": { "type": "string" },
-                "ioa_percent": { "type": "number", "minimum": 0, "maximum": 100 }
-            },
-            "required": ["header_ref"]
-        },
-        "LatencyLog": {
-            "type": "object",
-            "properties": {
-                "header_ref": { "$ref": "#/definitions/Header" },
-                "trial_list": {
-                    "type": "array",
-                    "minItems": 1,
-                    "items": {
-                        "type": "object",
-                        "required": ["trial_number", "cue_time", "cue_text", "behavior_occurred"],
-                        "properties": {
-                            "trial_number": { "type": "integer", "minimum": 1 },
-                            "cue_time": { "type": "string", "format": "date-time" },
-                            "cue_text": { "type": "string" },
-                            "cue_difficulty": { "type": "string", "enum": ["easy", "moderate", "difficult", "unknown"] },
-                            "student_acknowledged": { "type": "boolean" },
-                            "behavior_occurred": { "type": "boolean" },
-                            "onset_time": { "type": "string", "format": "date-time" },
-                            "latency_seconds": { "type": "number", "minimum": 0 },
-                            "consequence_tag": { "type": "string" },
-                            "notes": { "type": "string" }
-                        }
-                    }
-                },
-                "trials_observed": { "type": "integer" },
-                "trials_with_behavior": { "type": "integer" },
-                "conditional_probability": { "type": "number", "minimum": 0, "maximum": 1 },
-                "median_latency_seconds": { "type": "number" },
-                "ioa_for_trials": { "type": "boolean" },
-                "ioa_tolerance_seconds": { "type": "integer" },
-                "ioa_percent": { "type": "number", "minimum": 0, "maximum": 100 }
-            },
-            "required": ["header_ref", "trial_list"]
-        },
-        "ABCEvent": {
-            "type": "object",
-            "properties": {
-                "header_ref": { "$ref": "#/definitions/Header" },
-                "event_number": { "type": "integer" },
-                "event_time": { "type": "string", "format": "date-time" },
-                "activity_context": { "type": "string" },
-                "antecedent_description": { "type": "string" },
-                "behavior_description": { "type": "string" },
-                "consequence_description": { "type": "string" },
-                "who_responded": { "type": "array", "items": { "type": "string" } },
-                "function_hypothesis": { "type": "array", "items": { "type": "string", "enum": ["Escape", "Attention", "Tangible", "Sensory", "Unknown"] } },
-                "setting_events_present": { "type": "array", "items": { "type": "string" } },
-                "severity_rating": { "type": "integer", "minimum": 1, "maximum": 5 },
-                "followup_actions": { "type": "string" },
-                "attach_media": { "type": "string" },
-                "ioa_event_coded": { "type": "boolean" },
-                "ioa_percent": { "type": "number", "minimum": 0, "maximum": 100 }
-            },
-            "required": ["header_ref", "event_time", "activity_context", "antecedent_description", "behavior_description", "consequence_description"]
-        },
-        "Scatterplot": {
-            "type": "object",
-            "properties": {
-                "header_ref": { "$ref": "#/definitions/Header" },
-                "block_size_minutes": { "type": "integer", "minimum": 1 },
-                "observation_period_start": { "type": "string", "format": "time" },
-                "observation_period_end": { "type": "string", "format": "time" },
-                "day_label": { "type": "string" },
-                "blocks": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "required": ["block_start", "block_end", "occurrences_count"],
-                        "properties": {
-                            "block_start": { "type": "string", "format": "time" },
-                            "block_end": { "type": "string", "format": "time" },
-                            "occurrences_count": { "type": "integer", "minimum": 0 },
-                            "duration_flag": { "type": "boolean" },
-                            "notes": { "type": "string" }
-                        }
-                    }
-                },
-                "aggregate_peak_blocks": { "type": "array", "items": { "type": "string" } },
-                "notes": { "type": "string" }
-            },
-            "required": ["header_ref", "block_size_minutes"]
-        },
-        "IntervalSampling": {
-            "type": "object",
-            "properties": {
-                "header_ref": { "$ref": "#/definitions/Header" },
-                "method": { "type": "string", "enum": ["partial_interval", "whole_interval", "momentary_time_sampling"] },
-                "interval_seconds": { "type": "integer", "minimum": 1 },
-                "observation_minutes": { "type": "integer", "minimum": 1 },
-                "total_intervals": { "type": "integer" },
-                "interval_records": { "type": "array", "items": { "type": "string", "enum": ["Y", "N", "U"] } },
-                "percent_intervals_with_behavior": { "type": "number", "minimum": 0, "maximum": 100 },
-                "ioa_interval_agreement": { "type": "number", "minimum": 0, "maximum": 100 }
-            },
-            "required": ["header_ref", "method", "interval_seconds", "observation_minutes"]
-        },
-        "PrecursorTracking": {
-            "type": "object",
-            "properties": {
-                "header_ref": { "$ref": "#/definitions/Header" },
-                "precursor_definitions": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
-                "precursor_occurrence_list": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "timestamp": { "type": "string", "format": "date-time" },
-                            "precursor_type": { "type": "string" },
-                            "subsequent_problem_within_window": { "type": "boolean" },
-                            "notes": { "type": "string" }
-                        },
-                        "required": ["timestamp", "precursor_type", "subsequent_problem_within_window"]
-                    }
-                },
-                "prediction_metrics": { "type": "object" },
-                "ioa_precursor_check": { "type": "boolean" },
-                "ioa_percent": { "type": "number", "minimum": 0, "maximum": 100 }
-            },
-            "required": ["header_ref", "precursor_definitions"]
-        },
-        "IOALog": {
-            "type": "object",
-            "properties": {
-                "session_ref": { "type": "string" },
-                "ioa_session_date": { "type": "string", "format": "date" },
-                "tool_used": { "type": "string" },
-                "observer_A": { "type": "string" },
-                "observer_B": { "type": "string" },
-                "agreement_method": { "type": "string", "enum": ["percent_agreement", "time_window", "kappa"] },
-                "agreements": { "type": "integer" },
-                "disagreements": { "type": "integer" },
-                "computed_agreement_percent": { "type": "number", "minimum": 0, "maximum": 100 },
-                "notes": { "type": "string" },
-                "retrain_required": { "type": "boolean" },
-                "retrain_plan": { "type": "string" }
-            },
-            "required": ["ioa_session_date", "observer_A", "observer_B", "agreement_method"]
-        },
-        "FidelityChecklist": {
-            "type": "object",
-            "properties": {
-                "header_ref": { "$ref": "#/definitions/Header" },
-                "observer_name": { "type": "string" },
-                "op_def_visible": { "type": "boolean" },
-                "correct_tool_selected": { "type": "boolean" },
-                "timer_functional": { "type": "boolean" },
-                "tags_used": { "type": "boolean" },
-                "unobtrusive_observation": { "type": "boolean" },
-                "safety_protocols_followed": { "type": "boolean" },
-                "post_session_notes_completed": { "type": "boolean" },
-                "issues_flagged": { "type": "string" },
-                "signature": { "type": "string" },
-                "date_signed": { "type": "string", "format": "date" }
-            },
-            "required": ["header_ref", "observer_name", "op_def_visible", "correct_tool_selected"]
-        },
-        "PilotChecklist": {
-            "type": "object",
-            "properties": {
-                "header_ref": { "$ref": "#/definitions/Header" },
-                "pilot_date": { "type": "string", "format": "date" },
-                "pilot_observers": { "type": "array", "items": { "type": "string" } },
-                "pilot_ioa_done": { "type": "boolean" },
-                "pilot_findings": { "type": "string" },
-                "adjustments_needed": { "type": "string" },
-                "signoff_to_start_baseline": { "type": "boolean" },
-                "signoff_by": { "type": "string" },
-                "signoff_date": { "type": "string", "format": "date" }
-            },
-            "required": ["header_ref", "pilot_date"]
-        },
-        "ConsentPrivacy": {
-            "type": "object",
-            "properties": {
-                "student_name": { "type": "string" },
-                "consent_for_observation_home": { "type": "boolean" },
-                "consent_for_observation_school": { "type": "boolean" },
-                "consent_for_video": { "type": "boolean" },
-                "allowed_viewers_list": { "type": "string" },
-                "consent_signed_by": { "type": "string" },
-                "consent_signed_date": { "type": "string", "format": "date" },
-                "consent_document_upload": { "type": "string" },
-                "storage_location": { "type": "string" },
-                "retention_period": { "type": "string" }
-            },
-            "required": ["student_name", "consent_for_observation_school", "consent_for_observation_home", "consent_signed_by", "consent_signed_date"]
-        },
-        "SamplingSchedule": {
-            "type": "object",
-            "properties": {
-                "case_ref": { "type": "string" },
-                "context_label": { "type": "string" },
-                "proposed_dates": { "type": "array", "items": { "type": "string", "format": "date-time" } },
-                "observer_assigned": { "type": "string" },
-                "ioa_assigned": { "type": "string" },
-                "session_length_minutes": { "type": "integer" },
-                "session_count": { "type": "integer" },
-                "recurrence_rule": { "type": "string" },
-                "confirmation_status": { "type": "string", "enum": ["pending", "confirmed", "completed"] },
-                "reminders_enabled": { "type": "boolean" }
-            },
-            "required": ["case_ref", "context_label", "proposed_dates", "observer_assigned"]
-        },
-        "DataSynthesis": {
-            "type": "object",
-            "properties": {
-                "case_ref": { "type": "string" },
-                "context": { "type": "string" },
-                "mean_rate_per_min": { "type": "number" },
-                "mean_duration_sec": { "type": "number" },
-                "median_latency_sec": { "type": "number" },
-                "conditional_probability": { "type": "number" },
-                "peak_blocks": { "type": "string" },
-                "ioa_mean_percent": { "type": "number" },
-                "interpretation_supports_indirect": { "type": "boolean" },
-                "interpretation_rationale": { "type": "string" },
-                "recommended_next_action": { "type": "string", "enum": ["StructuredProbe", "BriefFA", "ExtendBaseline", "ChangeTools", "InterventionDesign"] },
-                "team_signoff": { "type": "array", "items": { "type": "string" } }
-            },
-            "required": ["case_ref", "context"]
-        }
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "FBA_Direct_Measurement_Schemas",
+  "type": "object",
+  "definitions": {
+    "Header": {
+      "type": "object",
+      "required": [
+        "student_id",
+        "student_name",
+        "target_behavior",
+        "context_label",
+        "observer_name",
+        "date",
+        "start_time",
+        "end_time",
+        "session_number",
+        "session_length_minutes",
+        "consent_confirmed"
+      ],
+      "properties": {
+        "student_id": {"type":"string"},
+        "student_name": {"type":"string"},
+        "dob_age_grade": {"type":"string"},
+        "target_behavior": {"type":"string"},
+        "context_label": {"type":"string"},
+        "observer_name": {"type":"string"},
+        "observer_role": {"type":"string","enum":["Observer","Observer2","DataLead","SafetyMonitor","Parent"]},
+        "ioa_observer_name": {"type":"string"},
+        "date": {"type":"string","format":"date"},
+        "start_time": {"type":"string","format":"time"},
+        "end_time": {"type":"string","format":"time"},
+        "session_number": {"type":"integer","minimum":1},
+        "session_length_minutes": {"type":"integer","minimum":1},
+        "safety_monitor": {"type":"string"},
+        "consent_confirmed": {"type":"boolean"},
+        "video_consent_confirmed": {"type":"boolean"},
+        "submission_timestamp": {"type":"string","format":"date-time"},
+        "form_version": {"type":"string"}
+      }
     },
-    "properties": {
-        "header": { "$ref": "#/definitions/Header" },
-        "event_recording": { "$ref": "#/definitions/EventRecording" },
-        "duration_log": { "$ref": "#/definitions/DurationLog" },
-        "latency_log": { "$ref": "#/definitions/LatencyLog" },
-        "abc_event": { "$ref": "#/definitions/ABCEvent" },
-        "scatterplot": { "$ref": "#/definitions/Scatterplot" },
-        "interval_sampling": { "$ref": "#/definitions/IntervalSampling" },
-        "precursor_tracking": { "$ref": "#/definitions/PrecursorTracking" },
-        "ioa_log": { "$ref": "#/definitions/IOALog" },
-        "fidelity_checklist": { "$ref": "#/definitions/FidelityChecklist" },
-        "pilot_checklist": { "$ref": "#/definitions/PilotChecklist" },
-        "consent_privacy": { "$ref": "#/definitions/ConsentPrivacy" },
-        "sampling_schedule": { "$ref": "#/definitions/SamplingSchedule" },
-        "data_synthesis": { "$ref": "#/definitions/DataSynthesis" }
+    "EventRecording": {
+      "type": "object",
+      "properties": {
+        "header_ref": {"$ref":"#/definitions/Header"},
+        "intervals": {
+          "type":"array",
+          "items":{
+            "type":"object",
+            "required":["interval_label","start_min","end_min","occurrences"],
+            "properties":{
+              "interval_label":{"type":"string"},
+              "start_min":{"type":"integer","minimum":0},
+              "end_min":{"type":"integer","minimum":0},
+              "occurrences":{"type":"integer","minimum":0},
+              "notes_for_interval":{"type":"string"}
+            }
+          }
+        },
+        "events": {
+          "type":"array",
+          "items":{
+            "type":"object",
+            "required":["event_time","event_tag"],
+            "properties":{
+              "event_time":{"type":"string","format":"time"},
+              "event_tag":{"type":"array","items":{"type":"string"}},
+              "consequence_tag":{"type":"array","items":{"type":"string"}},
+              "free_note":{"type":"string"}
+            }
+          }
+        },
+        "total_count":{"type":"integer","minimum":0},
+        "rate_per_minute":{"type":"number","minimum":0},
+        "ioa_done":{"type":"boolean"},
+        "ioa_percent":{"type":"number","minimum":0,"maximum":100},
+        "fidelity_op_def_used":{"type":"boolean"},
+        "submitter_comments":{"type":"string"}
+      },
+      "required":["header_ref"]
+    },
+    "DurationLog": {
+      "type":"object",
+      "properties":{
+        "header_ref":{"$ref":"#/definitions/Header"},
+        "behavior_prolonged":{"type":"boolean"},
+        "episode_list":{
+          "type":"array",
+          "items":{
+            "type":"object",
+            "required":["start_time","end_time"],
+            "properties":{
+              "episode_number":{"type":"integer","minimum":1},
+              "start_time":{"type":"string","format":"date-time"},
+              "end_time":{"type":"string","format":"date-time"},
+              "duration_seconds":{"type":"number","minimum":0},
+              "antecedent_tag":{"type":"string"},
+              "consequence_tag":{"type":"string"},
+              "intensity_rating":{"type":"integer","minimum":1,"maximum":5},
+              "notes":{"type":"string"}
+            }
+          }
+        },
+        "total_episodes":{"type":"integer"},
+        "total_duration_seconds":{"type":"number"},
+        "percent_of_session":{"type":"number","minimum":0,"maximum":100},
+        "ioa_recorded":{"type":"boolean"},
+        "ioa_method":{"type":"string"},
+        "ioa_percent":{"type":"number","minimum":0,"maximum":100}
+      },
+      "required":["header_ref"]
+    },
+    "LatencyLog": {
+      "type":"object",
+      "properties":{
+        "header_ref":{"$ref":"#/definitions/Header"},
+        "trial_list":{
+          "type":"array",
+          "minItems":1,
+          "items":{
+            "type":"object",
+            "required":["trial_number","cue_time","cue_text","behavior_occurred"],
+            "properties":{
+              "trial_number":{"type":"integer","minimum":1},
+              "cue_time":{"type":"string","format":"date-time"},
+              "cue_text":{"type":"string"},
+              "cue_difficulty":{"type":"string","enum":["easy","moderate","difficult","unknown"]},
+              "student_acknowledged":{"type":"boolean"},
+              "behavior_occurred":{"type":"boolean"},
+              "onset_time":{"type":"string","format":"date-time"},
+              "latency_seconds":{"type":"number","minimum":0},
+              "consequence_tag":{"type":"string"},
+              "notes":{"type":"string"}
+            }
+          }
+        },
+        "trials_observed":{"type":"integer"},
+        "trials_with_behavior":{"type":"integer"},
+        "conditional_probability":{"type":"number","minimum":0,"maximum":1},
+        "median_latency_seconds":{"type":"number"},
+        "ioa_for_trials":{"type":"boolean"},
+        "ioa_tolerance_seconds":{"type":"integer"},
+        "ioa_percent":{"type":"number","minimum":0,"maximum":100}
+      },
+      "required":["header_ref","trial_list"]
+    },
+    "ABCEvent": {
+      "type":"object",
+      "properties":{
+        "header_ref":{"$ref":"#/definitions/Header"},
+        "event_number":{"type":"integer"},
+        "event_time":{"type":"string","format":"date-time"},
+        "activity_context":{"type":"string"},
+        "antecedent_description":{"type":"string"},
+        "behavior_description":{"type":"string"},
+        "consequence_description":{"type":"string"},
+        "who_responded":{"type":"array","items":{"type":"string"}},
+        "function_hypothesis":{"type":"array","items":{"type":"string","enum":["Escape","Attention","Tangible","Sensory","Unknown"]}},
+        
+        "setting_events_present":{"type":"array","items":{"type":"string"}},
+        "severity_rating":{"type":"integer","minimum":1,"maximum":5},
+        "followup_actions":{"type":"string"},
+        "attach_media":{"type":"string"},
+        "ioa_event_coded":{"type":"boolean"},
+        "ioa_percent":{"type":"number","minimum":0,"maximum":100}
+      },
+      "required":["header_ref","event_time","activity_context","antecedent_description","behavior_description","consequence_description"]
+    },
+    "Scatterplot": {
+      "type":"object",
+      "properties":{
+        "header_ref":{"$ref":"#/definitions/Header"},
+        "block_size_minutes":{"type":"integer","minimum":1},
+        "observation_period_start":{"type":"string","format":"time"},
+        "observation_period_end":{"type":"string","format":"time"},
+        "day_label":{"type":"string"},
+        "blocks":{
+          "type":"array",
+          "items":{
+            "type":"object",
+            "required":["block_start","block_end","occurrences_count"],
+            "properties":{
+              "block_start":{"type":"string","format":"time"},
+              "block_end":{"type":"string","format":"time"},
+              "occurrences_count":{"type":"integer","minimum":0},
+              "duration_flag":{"type":"boolean"},
+              "notes":{"type":"string"}
+            }
+          }
+        },
+        "aggregate_peak_blocks":{"type":"array","items":{"type":"string"}},
+        "notes":{"type":"string"}
+      },
+      "required":["header_ref","block_size_minutes"]
+    },
+    "IntervalSampling": {
+      "type":"object",
+      "properties":{
+        "header_ref":{"$ref":"#/definitions/Header"},
+        "method":{"type":"string","enum":["partial_interval","whole_interval","momentary_time_sampling"]},
+        "interval_seconds":{"type":"integer","minimum":1},
+        "observation_minutes":{"type":"integer","minimum":1},
+        "total_intervals":{"type":"integer"},
+        "interval_records":{"type":"array","items":{"type":"string","enum":["Y","N","U"]}},
+        "percent_intervals_with_behavior":{"type":"number","minimum":0,"maximum":100},
+        "ioa_interval_agreement":{"type":"number","minimum":0,"maximum":100}
+      },
+      "required":["header_ref","method","interval_seconds","observation_minutes"]
+    },
+    "PrecursorTracking": {
+      "type":"object",
+      "properties":{
+        "header_ref":{"$ref":"#/definitions/Header"},
+        "precursor_definitions":{"type":"array","items":{"type":"string"},"minItems":1},
+        "precursor_occurrence_list":{
+          "type":"array",
+          "items":{
+            "type":"object",
+            "properties":{
+              "timestamp":{"type":"string","format":"date-time"},
+              "precursor_type":{"type":"string"},
+              "subsequent_problem_within_window":{"type":"boolean"},
+              "notes":{"type":"string"}
+            },
+            "required":["timestamp","precursor_type","subsequent_problem_within_window"]
+          }
+        },
+        "prediction_metrics":{"type":"object"},
+        "ioa_precursor_check":{"type":"boolean"},
+        "ioa_percent":{"type":"number","minimum":0,"maximum":100}
+      },
+      "required":["header_ref","precursor_definitions"]
+    },
+    "IOALog": {
+      "type":"object",
+      "properties":{
+        "session_ref":{"type":"string"},
+        "ioa_session_date":{"type":"string","format":"date"},
+        "tool_used":{"type":"string"},
+        "observer_A":{"type":"string"},
+        "observer_B":{"type":"string"},
+        "agreement_method":{"type":"string","enum":["percent_agreement","time_window","kappa"]},
+        "agreements":{"type":"integer"},
+        "disagreements":{"type":"integer"},
+        "computed_agreement_percent":{"type":"number","minimum":0,"maximum":100},
+        "notes":{"type":"string"},
+        "retrain_required":{"type":"boolean"},
+        "retrain_plan":{"type":"string"}
+      },
+      "required":["ioa_session_date","observer_A","observer_B","agreement_method"]
+    },
+    "FidelityChecklist": {
+      "type":"object",
+      "properties":{
+        "header_ref":{"$ref":"#/definitions/Header"},
+        "observer_name":{"type":"string"},
+        "op_def_visible":{"type":"boolean"},
+        "correct_tool_selected":{"type":"boolean"},
+        "timer_functional":{"type":"boolean"},
+        "tags_used":{"type":"boolean"},
+        "unobtrusive_observation":{"type":"boolean"},
+        "safety_protocols_followed":{"type":"boolean"},
+        "post_session_notes_completed":{"type":"boolean"},
+        "issues_flagged":{"type":"string"},
+        "signature":{"type":"string"},
+        "date_signed":{"type":"string","format":"date"}
+      },
+      "required":["header_ref","observer_name","op_def_visible","correct_tool_selected"]
+    },
+    "PilotChecklist": {
+      "type":"object",
+      "properties":{
+        "header_ref":{"$ref":"#/definitions/Header"},
+        "pilot_date":{"type":"string","format":"date"},
+        "pilot_observers":{"type":"array","items":{"type":"string"}},
+        "pilot_ioa_done":{"type":"boolean"},
+        "pilot_findings":{"type":"string"},
+        "adjustments_needed":{"type":"string"},
+        "signoff_to_start_baseline":{"type":"boolean"},
+        "signoff_by":{"type":"string"},
+        "signoff_date":{"type":"string","format":"date"}
+      },
+      "required":["header_ref","pilot_date"]
+    },
+    "ConsentPrivacy": {
+      "type":"object",
+      "properties":{
+        "student_name":{"type":"string"},
+        "consent_for_observation_home":{"type":"boolean"},
+        "consent_for_observation_school":{"type":"boolean"},
+        "consent_for_video":{"type":"boolean"},
+        "allowed_viewers_list":{"type":"string"},
+        "consent_signed_by":{"type":"string"},
+        "consent_signed_date":{"type":"string","format":"date"},
+        "consent_document_upload":{"type":"string"},
+        "storage_location":{"type":"string"},
+        "retention_period":{"type":"string"}
+      },
+      "required":["student_name","consent_for_observation_school","consent_for_observation_home","consent_signed_by","consent_signed_date"]
+    },
+    "SamplingSchedule": {
+      "type":"object",
+      "properties":{
+        "case_ref":{"type":"string"},
+        "context_label":{"type":"string"},
+        "proposed_dates":{"type":"array","items":{"type":"string","format":"date-time"}},
+        "observer_assigned":{"type":"string"},
+        "ioa_assigned":{"type":"string"},
+        "session_length_minutes":{"type":"integer"},
+        "session_count":{"type":"integer"},
+        "recurrence_rule":{"type":"string"},
+        "confirmation_status":{"type":"string","enum":["pending","confirmed","completed"]},
+        "reminders_enabled":{"type":"boolean"}
+      },
+      "required":["case_ref","context_label","proposed_dates","observer_assigned"]
+    },
+    "DataSynthesis": {
+      "type":"object",
+      "properties":{
+        "case_ref":{"type":"string"},
+        "context":{"type":"string"},
+        "mean_rate_per_min":{"type":"number"},
+        "mean_duration_sec":{"type":"number"},
+        "median_latency_sec":{"type":"number"},
+        "conditional_probability":{"type":"number"},
+        "peak_blocks":{"type":"string"},
+        "ioa_mean_percent":{"type":"number"},
+        "interpretation_supports_indirect":{"type":"boolean"},
+        "interpretation_rationale":{"type":"string"},
+        "recommended_next_action":{"type":"string","enum":["StructuredProbe","BriefFA","ExtendBaseline","ChangeTools","InterventionDesign"]},
+        "team_signoff":{"type":"array","items":{"type":"string"}}
+      },
+      "required":["case_ref","context"]
     }
+  },
+  "properties": {
+    "header": {"$ref":"#/definitions/Header"},
+    "event_recording": {"$ref":"#/definitions/EventRecording"},
+    "duration_log": {"$ref":"#/definitions/DurationLog"},
+    "latency_log": {"$ref":"#/definitions/LatencyLog"},
+    "abc_event": {"$ref":"#/definitions/ABCEvent"},
+    "scatterplot": {"$ref":"#/definitions/Scatterplot"},
+    "interval_sampling": {"$ref":"#/definitions/IntervalSampling"},
+    "precursor_tracking": {"$ref":"#/definitions/PrecursorTracking"},
+    "ioa_log": {"$ref":"#/definitions/IOALog"},
+    "fidelity_checklist": {"$ref":"#/definitions/FidelityChecklist"},
+    "pilot_checklist": {"$ref":"#/definitions/PilotChecklist"},
+    "consent_privacy": {"$ref":"#/definitions/ConsentPrivacy"},
+    "sampling_schedule": {"$ref":"#/definitions/SamplingSchedule"},
+    "data_synthesis": {"$ref":"#/definitions/DataSynthesis"}
+  }
 }
